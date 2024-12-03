@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FreshBasket Shop</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script>
+        // Cart logic
+        let cart = [];
+
+        function addToCart(productId, productName, productPrice, quantityId) {
+            const quantityInput = document.getElementById(quantityId);
+            const quantity = parseInt(quantityInput.value) || 1;
+
+            if (quantity <= 0) {
+                alert("Please select a valid quantity.");
+                return;
+            }
+
+            const existingProduct = cart.find(item => item.id === productId);
+            if (existingProduct) {
+                existingProduct.quantity += quantity;
+            } else {
+                cart.push({
+                    id: productId,
+                    name: productName,
+                    price: productPrice,
+                    quantity: quantity
+                });
+            }
+
+            updateCartCount();
+            alert(`${quantity} x ${productName} added to your cart.`);
+        }
+
+        function updateCartCount() {
+            const cartCountElement = document.getElementById('cart-count');
+            cartCountElement.textContent = cart.reduce((total, item) => total + item.quantity, 0);
+        }
+
+        document.addEventListener('DOMContentLoaded', updateCartCount);
+    </script>
+    <style>
+        /* General Styling */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f7f6;
+            color: #333;
+        }
+
+        .header {
+            background-color: #357a38;
+            color: #fff;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .header h1 {
+            margin: 0;
+        }
+
+        .cart-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+
+        .products-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .product-item {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            padding: 15px;
+            text-align: center;
+            border-radius: 5px;
+            transition: box-shadow 0.3s;
+        }
+
+        .product-item:hover {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .product-item img {
+            width: 100%;
+            border-radius: 5px;
+        }
+
+        .quantity-input {
+            width: 60px;
+            padding: 5px;
+            text-align: center;
+        }
+
+        .add-to-cart-button {
+            background-color: #357a38;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .add-to-cart-button:hover {
+            background-color: #285c2b;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>Welcome to FreshBasket Shop</h1>
+        <p>Your source for fresh and organic produce.</p>
+        <div class="cart-button">
+            <a href="{{ url_for('view_cart') }}">Go to Cart</a>
+
+                <img src="path/to/cart-icon.png" alt="Cart" width="30">
+                <span id="cart-count" class="cart-count">0</span>
+            </a>
+        </div>
+    </header>
+
+    <div class="products-container">
+        <!-- Product Example 1 -->
+        <div class="product-item">
+            <img src="{{ url_for('static', filename='images/organicapple.jpg') }}" alt="Organic Apple">
+            <h3>Organic Apples</h3>
+            <p>Crisp and sweet organic apples sourced from local farms.</p>
+            <p>₹299 / kg</p>
+            <input type="number" id="quantity-apple" class="quantity-input" min="1" value="1">
+            <button class="add-to-cart-button" onclick="addToCart('apple', 'Organic Apples', 299, 'quantity-apple')">Add to Cart</button>
+        </div>
+        
+        <!-- Product Example 2 -->
+        <div class="product-item">
+            <img src="{{ url_for('static', filename='images/freshcarrot.jpg') }}" alt="Fresh Carrot">
+            <h3>Fresh Carrots</h3>
+            <p>Crunchy, farm-fresh carrots perfect for salads and snacks.</p>
+            <p>₹149 / kg</p>
+            <input type="number" id="quantity-carrot" class="quantity-input" min="1" value="1">
+            <button class="add-to-cart-button" onclick="addToCart('carrot', 'Fresh Carrots', 149, 'quantity-carrot')">Add to Cart</button>
+        </div>
+        
+        <!-- Product Example 3 -->
+        <div class="product-item">
+            <img src="{{ url_for('static', filename='images/farm fresh eggs.jpg') }}" alt="Farm Fresh Eggs">
+            <h3>Farm Fresh Eggs</h3>
+            <p>Fresh, cage-free eggs packed with protein and nutrients.</p>
+            <p>₹99 / dozen</p>
+            <input type="number" id="quantity-egg" class="quantity-input" min="1" value="1">
+            <button class="add-to-cart-button" onclick="addToCart('egg', 'Farm Fresh Eggs', 99, 'quantity-egg')">Add to Cart</button>
+        </div>
+        
+        <!-- Product Example 4 -->
+        <div class="product-item">
+            <img src="{{ url_for('static', filename='images/fresh mangoes.jpg') }}" alt="Fresh Mangoes">
+            <h3>Fresh Mangoes</h3>
+            <p>Sweet and juicy mangoes that are perfect for smoothies.</p>
+            <p>₹199 / kg</p>
+            <input type="number" id="quantity-mango" class="quantity-input" min="1" value="1">
+            <button class="add-to-cart-button" onclick="addToCart('mango', 'Fresh Mangoes', 199, 'quantity-mango')">Add to Cart</button>
+        </div>
+        
+        <!-- Product Example 5 -->
+        <div class="product-item">
+            <img src="{{ url_for('static', filename='images/sweet potato.jpg') }}" alt="Sweet Potatoes">
+            <h3>Sweet Potatoes</h3>
+            <p>Nutritious, high in fiber, and perfect for baking or boiling.</p>
+            <p>₹179 / kg</p>
+            <input type="number" id="quantity-sweet-potato" class="quantity-input" min="1" value="1">
+            <button class="add-to-cart-button" onclick="addToCart('sweet-potato', 'Sweet Potatoes', 179, 'quantity-sweet-potato')">Add to Cart</button>
+        </div>
+        
+        <!-- Product Example 6 -->
+        <div class="product-item">
+            <img src="{{ url_for('static', filename='images/green lettuce.jpg') }}" alt="Green Lettuce">
+            <h3>Green Lettuce</h3>
+            <p>Fresh, crunchy lettuce perfect for salads and sandwiches.</p>
+            <p>₹89 / bunch</p>
+            <input type="number" id="quantity-lettuce" class="quantity-input" min="1" value="1">
+            <button class="add-to-cart-button" onclick="addToCart('lettuce', 'Green Lettuce', 89, 'quantity-lettuce')">Add to Cart</button>
+        </div>
+        
+        <!-- Product Example 7 -->
+        <div class="product-item">
+            <img src="{{ url_for('static', filename='images/organic bananas.jpg') }}" alt="Organic Bananas">
+            <h3>Organic Bananas</h3>
+            <p>Naturally ripened bananas packed with vitamins and minerals.</p>
+            <p>₹59 / bunch</p>
+            <input type="number" id="quantity-banana" class="quantity-input" min="1" value="1">
+            <button class="add-to-cart-button" onclick="addToCart('banana', 'Organic Bananas', 59, 'quantity-banana')">Add to Cart</button>
+        </div>
+        
+        <!-- Product Example 8 -->
+        <div class="product-item">
+            <img src="{{ url_for('static', filename='images/red bell peppers.jpg') }}" alt="Red Bell Peppers">
+            <h3>Red Bell Peppers</h3>
+            <p>Juicy and vibrant red bell peppers perfect for cooking and salads.</p>
+            <p>₹120 / kg</p>
+            <input type="number" id="quantity-bell-pepper" class="quantity-input" min="1" value="1">
+            <button class="add-to-cart-button" onclick="addToCart('bell-pepper', 'Red Bell Peppers', 120, 'quantity-bell-pepper')">Add to Cart</button>
+        </div>
+        
+        <!-- Product Example 9 -->
+        <div class="product-item">
+            <img src="{{ url_for('static', filename='images/resh tomatoes.jpg') }}" alt="Fresh Tomatoes">
+            <h3>Fresh Tomatoes</h3>
+            <p>Plump, juicy tomatoes perfect for cooking and salads.</p>
+            <p>₹69 / kg</p>
+            <input type="number" id="quantity-tomato" class="quantity-input" min="1" value="1">
+            <button class="add-to-cart-button" onclick="addToCart('tomato', 'Fresh Tomatoes', 69, 'quantity-tomato')">Add to Cart</button>
+        </div>
+        
+        <!-- Product Example 10 -->
+        <div class="product-item">
+            <img src="{{ url_for('static', filename='images/juicy orages.jpg') }}" alt="Juicy Oranges">
+            <h3>Juicy Oranges</h3>
+            <p>Tangy and sweet oranges, great for juices and snacking.</p>
+            <p>₹129 / kg</p>
+            <input type="number" id="quantity-orange" class="quantity-input" min="1" value="1">
+            <button class="add-to-cart-button" onclick="addToCart('orange', 'Juicy Oranges', 129, 'quantity-orange')">Add to Cart</button>
+        </div>
+        
+        <!-- Product Example 11 -->
+        <div class="product-item">
+            <img src="{{ url_for('static', filename='images/fresh pineapples.jpg') }}" alt="Fresh Pineapples">
+            <h3>Fresh Pineapples</h3>
+            <p>Tropical sweetness in every bite. Perfect for smoothies.</p>
+            <p>₹149 / each</p>
+            <input type="number" id="quantity-pineapple" class="quantity-input" min="1" value="1">
+            <button class="add-to-cart-button" onclick="addToCart('pineapple', 'Fresh Pineapples', 149, 'quantity-pineapple')">Add to Cart</button>
+        </div>
+        
+        <!-- Product Example 12 -->
+        <div class="product-item">
+            <img src="{{ url_for('static', filename='images/res grapes.jpg') }}" alt="Red Grapes">
+            <h3>Red Grapes</h3>
+            <p>Sweet and juicy red grapes, perfect for a healthy snack.</p>
+            <p>₹249 / kg</p>
+            <input type="number" id="quantity-grapes" class="quantity-input" min="1" value="1">
+            <button class="add-to-cart-button" onclick="addToCart('grapes', 'Red Grapes', 249, 'quantity-grapes')">Add to Cart</button>
+        </div>
+    </div>
+    
+    </body>
+</html>

@@ -24,7 +24,7 @@ products = [
 ]
 
 app = Flask(__name__)
-#app.secret_key = os.getenv('FLASK_SECRET_KEY', secrets.token_hex(16))
+app.secret_key = os.getenv('FLASK_SECRET_KEY', secrets.token_hex(16))
  
 
 # Database configuration
@@ -48,7 +48,7 @@ def get_db_connection():
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('home.html')
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -97,30 +97,39 @@ def login():
             flash('Database connection error. Please try again later.', 'danger')
             return redirect(url_for('login'))
 
-        cursor = conn.cursor(dictionary=True)
+        # Use a buffered cursor to handle unread results
+        cursor = conn.cursor(dictionary=True, buffered=True)
         try:
+            # Execute the query
             cursor.execute('SELECT * FROM users WHERE email = %s', (email,))
-            user = cursor.fetchone()
+            user = cursor.fetchone()  # Fetch a single result
 
             if user and check_password_hash(user['password'], password):
+                # Set session variables
                 session['user_id'] = user['id']
                 session['user_name'] = user['name']
                 session['role'] = user['role']
                 flash('Login successful!', 'success')
 
+                # Redirect based on user role
                 if user['role'] == 'admin':
                     return redirect(url_for('admin_dashboard'))
                 else:
                     return redirect(url_for('shop'))
             else:
+                # Handle invalid credentials
                 flash('Invalid email or password. Please try again.', 'danger')
         except Error as e:
+            # Log and display database errors
             flash(f'An error occurred: {str(e)}', 'danger')
         finally:
+            # Ensure the cursor and connection are closed
             cursor.close()
             conn.close()
 
+    # Render the login page for GET requests
     return render_template('login.html')
+
 
 
 @app.route('/shop')
