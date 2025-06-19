@@ -29,13 +29,13 @@ app.secret_key = os.getenv('FLASK_SECRET_KEY', secrets.token_hex(16))
 
 # Database configuration
 db_config = {
-    'host': 'freshbasketdb.cxme8a4m4kjr.us-east-1.rds.amazonaws.com',  # Your RDS endpoint
-    'user': 'admin',  # Your DB username
-    'password': 'freshbasket',  # Your DB password
-    'database': 'fresh'
+    'user': 'admin',
+    'password': ''freshbasketpw',
+    'host': 'freshbasket.cydaiay6snh1.us-east-1.rds.amazonaws.com',
+    'database': 'freshbasket',
+    'port': 3306
 }
 
-# Connection pool setup
 cnxpool = MySQLConnectionPool(pool_name="mypool", pool_size=5, **db_config)
 
 # Function to establish a database connection
