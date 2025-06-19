@@ -30,7 +30,7 @@ app.secret_key = os.getenv('FLASK_SECRET_KEY', secrets.token_hex(16))
 # Database configuration
 db_config = {
     'user': 'admin',
-    'password': ''freshbasketpw',
+    'password': 'freshbasketpw',
     'host': 'freshbasket.cydaiay6snh1.us-east-1.rds.amazonaws.com',
     'database': 'freshbasket',
     'port': 3306
